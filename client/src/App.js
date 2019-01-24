@@ -8,6 +8,7 @@ import "./App.css";
 
 class App extends Component {
   state = {
+    connected: false,
     storageValue: 0,
     web3: null,
     accounts: null,
@@ -33,7 +34,7 @@ class App extends Component {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance, connected: true });
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -46,8 +47,9 @@ class App extends Component {
   handleClick = async event => {
     this.setState({ loading: true });
     const { accounts, contract } = this.state;
-    var val = 7;
-    await contract.methods.set(val).send({ from: accounts[0] });
+    var val = 1;
+    const currentBalance = await contract.methods.get().call();
+    await contract.methods.set(currentBalance + val).send({ from: accounts[0] });
     const res = await contract.methods.get().call();
     this.setState({ storageValue: res, loading: false });
   };
@@ -67,7 +69,7 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
+        {this.state.connected ? <h1>Good to Go!</h1> : <p />}
         <div>The stored value is: {this.state.storageValue}</div>
         <Button
           type="primary"
