@@ -1,12 +1,11 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body,
+html {
+  font-family: 'Open Sans', sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
+.status {
+  border-radius: 20%/50%;
+  border-color: white;
 }

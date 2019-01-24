@@ -1,11 +1,15 @@
 import React, { Component } from "react";
-import ReactLoading from "react-loading";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./utils/getWeb3";
-import { Button } from "antd";
-
+import { Badge, Layout, Menu } from "antd";
+import "antd/dist/antd.css";
 import "./App.css";
+import Home from "./components/Home";
 
+const { Header } = Layout;
+
+var headerStyles = { position: "fixed", zIndex: 1, width: "100%" };
 class App extends Component {
   state = {
     connected: false,
@@ -44,41 +48,30 @@ class App extends Component {
     }
   };
 
-  handleClick = async event => {
-    this.setState({ loading: true });
-    const { accounts, contract } = this.state;
-    var val = 1;
-    const currentBalance = await contract.methods.get().call();
-    await contract.methods.set(currentBalance + val).send({ from: accounts[0] });
-    const res = await contract.methods.get().call();
-    this.setState({ storageValue: res, loading: false });
-  };
-
   render() {
-    if (!this.state.web3) {
-      return (
-        <div className="App center">
-          <ReactLoading
-            type={"balls"}
-            color={"blue"}
-            height={"10%"}
-            width={"10%"}
-          />
-        </div>
-      );
-    }
     return (
-      <div className="App">
-        {this.state.connected ? <h1>Good to Go!</h1> : <p />}
-        <div>The stored value is: {this.state.storageValue}</div>
-        <Button
-          type="primary"
-          loading={this.state.loading}
-          onClick={this.handleClick.bind(this)}
-        >
-          Set Storage
-        </Button>
-      </div>
+      <Layout>
+        <Header style={headerStyles}>
+          <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
+            <div className="status">
+              {this.state.connected ? (
+                <div className="status">
+                  Connected <Badge status="success" />
+                </div>
+              ) : (
+                <div className="status">
+                  Disconnected <Badge status="error" />
+                </div>
+              )}
+            </div>
+          </Menu>
+        </Header>
+        <Router>
+          <Switch>
+            <Route exact path="/" render={() => <Home {...this.state} />} />
+          </Switch>
+        </Router>
+      </Layout>
     );
   }
 }
