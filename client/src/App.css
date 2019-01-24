@@ -4,3 +4,7 @@ body,
 html {
   font-family: 'Open Sans', sans-serif;
 }
+
+.logo {
+  width: 45px;
+}

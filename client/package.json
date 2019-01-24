@@ -1,6 +1,6 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "dcart",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "antd": "^3.12.4",

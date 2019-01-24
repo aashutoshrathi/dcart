@@ -6,6 +6,7 @@ import { Badge, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import "./App.css";
 import Home from "./components/Home";
+import Logo from "./assets/logo.png"
 
 const { Header } = Layout;
 
@@ -67,23 +68,30 @@ class App extends Component {
       <Layout>
         <Header style={headerStyles}>
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
-            <Menu.Item key="2">
-              {this.state.connected ? (
-                <div className="status">Account: {this.state.accounts[0]}</div>
-              ) : (
-                <div />
-              )}
+            <Menu.Item key="0">
+              <div>
+                <img src={Logo} alt="D-Cart" className="logo"/>
+              </div>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="1">
               {this.state.connected ? (
                 <div className="status">
-                  Balance: {this.state.currentBalance} ETH
+                  <b>Account:</b> {this.state.accounts[0]}
                 </div>
               ) : (
                 <div />
               )}
             </Menu.Item>
-            <Menu.Item key="1">
+            <Menu.Item key="2">
+              {this.state.connected ? (
+                <div className="status">
+                  <b>Balance:</b> {this.state.currentBalance} ETH
+                </div>
+              ) : (
+                <div />
+              )}
+            </Menu.Item>
+            <Menu.Item key="3">
               {this.state.connected ? (
                 <div className="status">
                   Connected <Badge status="success" />
