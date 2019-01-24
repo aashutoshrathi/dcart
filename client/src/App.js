@@ -17,7 +17,8 @@ class App extends Component {
     web3: null,
     accounts: null,
     contract: null,
-    loading: false
+    loading: false,
+    currentBalance: null
   };
 
   componentDidMount = async () => {
@@ -39,6 +40,7 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, contract: instance, connected: true });
+      this.fetchUserBalance();
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -48,12 +50,40 @@ class App extends Component {
     }
   };
 
+  fetchBalance(address, key) {
+    this.state.web3.eth.getBalance(address).then(wei => {
+      let obj = {};
+      obj[key] = Math.round((wei / 1e18) * 100) / 100;
+      this.setState(obj);
+    });
+  }
+
+  fetchUserBalance() {
+    this.fetchBalance(this.state.accounts[0], "currentBalance");
+  }
+
   render() {
     return (
       <Layout>
         <Header style={headerStyles}>
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
-            <div className="status">
+            <Menu.Item key="2">
+              {this.state.connected ? (
+                <div className="status">Account: {this.state.accounts[0]}</div>
+              ) : (
+                <div />
+              )}
+            </Menu.Item>
+            <Menu.Item key="3">
+              {this.state.connected ? (
+                <div className="status">
+                  Balance: {this.state.currentBalance} ETH
+                </div>
+              ) : (
+                <div />
+              )}
+            </Menu.Item>
+            <Menu.Item key="1">
               {this.state.connected ? (
                 <div className="status">
                   Connected <Badge status="success" />
@@ -63,7 +93,7 @@ class App extends Component {
                   Disconnected <Badge status="error" />
                 </div>
               )}
-            </div>
+            </Menu.Item>
           </Menu>
         </Header>
         <Router>
