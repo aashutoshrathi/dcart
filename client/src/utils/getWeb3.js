@@ -24,6 +24,7 @@ const getWeb3 = () =>
         resolve(web3);
       }
       // Fallback to localhost; use dev console port by default...
+      // admin.startRPC("127.0.0.1", 8545, "*", "web3,db,net,eth") from geth console
       else {
         const provider = new Web3.providers.HttpProvider(
           "http://127.0.0.1:8545" // Ganache Default

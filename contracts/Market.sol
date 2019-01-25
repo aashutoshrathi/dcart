@@ -1,7 +1,16 @@
 
 pragma solidity ^0.5.0;
+import "./SafeMath.sol";
+import "./Ownable.sol";
+import "./Stoppable.sol";
 
-contract Market {
+contract Market is Ownable, Stoppable {
+  using SafeMath for uint;
+  uint skuCount = 0;
+  uint storeCount = 0;
+  
+  // for circuit breaker
+  bool public stopped = false;
 
   struct Store {
     address payable storeOwner;
@@ -10,7 +19,7 @@ contract Market {
     mapping (uint=>Item) storeItems;
   }
 
-  enum State {ForSale, Sold, Shipped, Recieved}
+  enum State {ItemForSale, Sold, Shipped, Recieved}
 
   struct Item {
     string name;
@@ -19,102 +28,118 @@ contract Market {
     State state;
   }
 
-  mapping(uint => Item) public items;
   mapping(uint => Store) public stores;
   mapping(address => bool) public isAdmin;
 
-  event ForSale(uint _sku, uint _storeID);
-  event Sold(uint _sku, uint _storeID);
-  event Shipped(uint _sku, uint _storeID);
-  event Recieved(uint _sku, uint _storeID);
+  event ForSale(uint _sku, uint _storeID, string _name, uint _quantity);
+  event Sold(uint _sku, uint _storeID, uint _quantity);
   event AdminAdded(address _user);
   event AdminRemoved(address _user);
-  event StoreAdded(address _owner, string _name, uint _skuCount, );
+  event StoreAdded(address _owner, string _name, uint _skuCount);
   event StoreRemoved(address _user);
 
-  modifier checkOwner () {
-    require(msg.sender == owner, "You are not owner");
+  modifier verifyCaller (address _address) { 
+    require (msg.sender == _address); 
     _;
   }
-  modifier verifyCaller (address _address) { require (msg.sender == _address); _;}
-
-  modifier paidEnough(uint _price) { require(msg.value >= _price); _;}
-  modifier checkValue(uint _sku) {
-    //refund them after pay for item (why it is before, _ checks for logic before func)
+  
+  modifier checkOwnerOfStore(address _storeOwner, uint _storeID) {
+    require (_storeOwner == stores[_storeID].storeOwner, "No Permissions to temper with someone else's store");
     _;
-    uint _price = items[_sku].price;
+  }
+  
+  modifier paidEnough(uint _totalPrice) { require(msg.value >= _totalPrice); _;}
+  modifier checkValue(uint _sku, uint _storeID) {
+    _;
+    uint _price = stores[_storeID].storeItems[_sku].price;
     uint amountToRefund = msg.value - _price;
-    items[_sku].buyer.transfer(amountToRefund);
   }
-
-  modifier forSale(uint _sku) {
-    require(items[_sku].state == State.ForSale);
-    _;
-  }
-  modifier sold(uint _sku) {
-    require(items[_sku].state == State.Sold);
-    _;
-  }
-  modifier shipped(uint _sku) {
-    require(items[_sku].state == State.Shipped);
-    _;
-  }
-  modifier received(uint _sku) {
-    require(items[_sku].state == State.Recieved);
+  
+  modifier checkQuantity(uint _quantity, uint _storeID, uint _itemCode) {
+    require(_quantity <= stores[_storeID].storeItems[_itemCode].sku, "Not sufficient quantity available");
     _;
   }
 
+  modifier ItemForSale(uint _sku, uint _storeID) {
+    require(stores[_storeID].storeItems[_sku].state == State.ItemForSale, "Item not for sale :(");
+    _;
+  }
+
+  modifier sold(uint _sku, uint _storeID) {
+    require(stores[_storeID].storeItems[_sku].state == State.Sold, "Item Sold!");
+    _;
+  }
 
   constructor() public {
-    owner = msg.sender;
     skuCount = 0;
   }
 
-  function addItem(string memory _name, uint _price) public returns(bool){
-    emit ForSale(skuCount);
-    items[skuCount] = Item({name: _name, sku: skuCount, price: _price, state: State.ForSale, seller: msg.sender, buyer: address(0)});
-    skuCount += 1;
-    return true;
+  function addItem(string memory _name, uint _price, uint _sku, uint _storeID) public 
+    checkOwnerOfStore(msg.sender, _storeID)
+    stopInEmergency()
+  {
+    require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
+    skuCount = SafeMath.add(skuCount, 1); // increase overall items count
+    stores[_storeID].storeItems[skuCount].name = _name;
+    stores[_storeID].storeItems[skuCount].price = _price;
+    stores[_storeID].storeItems[skuCount].sku = _sku;
+    emit ForSale(skuCount, _storeID, _name, _sku);
   }
 
-  function buyItem (uint sku)
+  function buyItem(uint _sku, uint _quantity, uint _storeID)
     public
     payable
-    checkValue(sku)
-    forSale(sku)
-    paidEnough(items[sku].price)
+    stopInEmergency()
+    checkValue(_sku, _storeID)
+    ItemForSale(_sku, _storeID)
+    paidEnough(SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity))
   {
-    items[sku].seller.transfer(items[sku].price);
-    items[sku].buyer = msg.sender;
-    items[sku].state = State.Sold;
-    emit Sold(sku);
+    stores[_storeID].storeItems[_sku].sku = SafeMath.sub(stores[_storeID].storeItems[_sku].sku,  _quantity);
+    emit Sold(_sku, _storeID, _quantity);
   }
 
-  function shipItem(uint sku)
+  function fetchItem(uint _sku, uint _storeID) public view returns (string memory name, uint sku, uint price, uint state) {
+    Item memory item = stores[_storeID].storeItems[_sku];
+    name = item.name;
+    sku = item.sku;
+    price = item.price;
+    state = uint(item.state);
+    return (name, sku, price, state);
+  }
+
+  function addStore(string memory _name, address payable _storeOwner, uint _storeSkuCount) 
     public
-    sold(sku)
-    verifyCaller(items[sku].seller)
+    stopInEmergency()
+    onlyOwner()
   {
-    items[sku].state = State.Shipped;
-    emit Shipped(sku);
+    require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
+    storeCount = SafeMath.add(storeCount, 1);
+    stores[storeCount].storeName = _name;
+    stores[storeCount].storeOwner = _storeOwner;
+    stores[storeCount].storeSkuCount = _storeSkuCount;
+    emit StoreAdded(_storeOwner, _name, _storeSkuCount);
   }
-
-  function receiveItem(uint sku)
+  
+  function freezeMarket() 
     public
-    shipped(sku)
-    verifyCaller(items[sku].buyer)
+    onlyOwner()
   {
-    items[sku].state = State.Recieved;
-    emit Recieved(sku);
+    stopped = true;      
   }
-
-  function fetchItem(uint _sku) public view returns (string memory name, uint sku, uint price, uint state, address seller, address buyer) {
-    name = items[_sku].name;
-    sku = items[_sku].sku;
-    price = items[_sku].price;
-    state = uint(items[_sku].state);
-    seller = items[_sku].seller;
-    buyer = items[_sku].buyer;
-    return (name, sku, price, state, seller, buyer);
+  
+  function resumeMarket()
+    public
+    onlyOwner()
+  {
+    stopped = false;
   }
+  
+  function withdrawAll() 
+    public
+    onlyOwner()
+    onlyInEmergency()
+  {
+    owner.transfer(address(this).balance);
+  }
+    
 }
