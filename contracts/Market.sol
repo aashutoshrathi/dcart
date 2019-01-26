@@ -1,5 +1,5 @@
-
 pragma solidity ^0.5.0;
+
 import "./SafeMath.sol";
 import "./Ownable.sol";
 import "./Stoppable.sol";
@@ -16,6 +16,7 @@ contract Market is Ownable, Stoppable {
     address payable storeOwner;
     string storeName;
     uint storeSkuCount;
+    uint balance;
     mapping (uint=>Item) storeItems;
   }
 
@@ -37,24 +38,28 @@ contract Market is Ownable, Stoppable {
   event AdminRemoved(address _user);
   event StoreAdded(address _owner, string _name, uint _skuCount);
   event StoreRemoved(address _user);
+  event StoreBalanceWithdrawn(uint _storeID, uint balanceToWithdraw);
 
   modifier verifyCaller (address _address) { 
     require (msg.sender == _address); 
     _;
   }
-  
+
+  modifier checkStoreExistence(uint _storeID) {
+    require(_storeID <= storeCount, "Invalid StoreID provided");
+    _;
+  }
+
   modifier checkOwnerOfStore(address _storeOwner, uint _storeID) {
-    require (_storeOwner == stores[_storeID].storeOwner, "No Permissions to temper with someone else's store");
+    require (_storeOwner == stores[_storeID].storeOwner, "You don't Permissions to temper with someone else's store");
     _;
   }
-  
-  modifier paidEnough(uint _totalPrice) { require(msg.value >= _totalPrice); _;}
-  modifier checkValue(uint _sku, uint _storeID) {
+
+  modifier paidEnough(uint _totalPrice) { 
+    require(msg.value >= _totalPrice); 
     _;
-    uint _price = stores[_storeID].storeItems[_sku].price;
-    uint amountToRefund = msg.value - _price;
   }
-  
+
   modifier checkQuantity(uint _quantity, uint _storeID, uint _itemCode) {
     require(_quantity <= stores[_storeID].storeItems[_itemCode].sku, "Not sufficient quantity available");
     _;
@@ -66,12 +71,12 @@ contract Market is Ownable, Stoppable {
   }
 
   modifier sold(uint _sku, uint _storeID) {
-    require(stores[_storeID].storeItems[_sku].state == State.Sold, "Item Sold!");
+    require(stores[_storeID].storeItems[_sku].state == State.Sold, "Error selling item.");
     _;
   }
 
   constructor() public {
-    skuCount = 0;
+    // skuCount = 0;
   }
 
   function addItem(string memory _name, uint _price, uint _sku, uint _storeID) public 
@@ -90,15 +95,33 @@ contract Market is Ownable, Stoppable {
     public
     payable
     stopInEmergency()
-    checkValue(_sku, _storeID)
     ItemForSale(_sku, _storeID)
     paidEnough(SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity))
   {
+    uint transactAmount = SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity);
     stores[_storeID].storeItems[_sku].sku = SafeMath.sub(stores[_storeID].storeItems[_sku].sku,  _quantity);
+    stores[_storeID].balance = SafeMath.add(stores[_storeID].balance, transactAmount);
     emit Sold(_sku, _storeID, _quantity);
   }
-
-  function fetchItem(uint _sku, uint _storeID) public view returns (string memory name, uint sku, uint price, uint state) {
+  
+  function withdrawStoreBalance(uint _storeID, uint amountToWithdraw)
+    public
+    payable
+    stopInEmergency()
+    checkOwnerOfStore(msg.sender, _storeID)
+  {
+    require(amountToWithdraw <= stores[_storeID].balance);
+    stores[_storeID].storeOwner.transfer(amountToWithdraw);
+    stores[_storeID].balance = SafeMath.sub(stores[_storeID].balance, amountToWithdraw);
+    emit StoreBalanceWithdrawn(_storeID, amountToWithdraw);
+  }
+  
+  function fetchItem(uint _sku, uint _storeID)
+    stopInEmergency()
+    public 
+    view 
+    returns (string memory name, uint sku, uint price, uint state) 
+  {
     Item memory item = stores[_storeID].storeItems[_sku];
     name = item.name;
     sku = item.sku;
@@ -112,7 +135,7 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
     onlyOwner()
   {
-    require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
+    require(bytes(_name).length <= 20, "Please keep name under 20 charachters"); // This makes sure that we don't end up using infinite gas.
     storeCount = SafeMath.add(storeCount, 1);
     stores[storeCount].storeName = _name;
     stores[storeCount].storeOwner = _storeOwner;
@@ -141,5 +164,43 @@ contract Market is Ownable, Stoppable {
   {
     owner.transfer(address(this).balance);
   }
-    
+  
+  function addAdmin(address _user)
+    public
+    stopInEmergency()
+    onlyOwner()
+  {
+    isAdmin[_user] = true;
+    emit AdminAdded(_user);
+  }
+  
+  function removeAdmin(address _user)
+    public
+    onlyOwner()
+    stopInEmergency()
+  {
+    isAdmin[_user] = false;
+    emit AdminAdded(_user);
+  }
+  
+  
+  function fetchStore(uint _storeID)
+    public
+    view
+    checkStoreExistence(_storeID)
+    returns(string memory name)
+  {
+    return stores[_storeID].storeName;
+  }
+  
+  function fetchStoreBalance(uint _storeID)
+    public
+    payable
+    stopInEmergency()
+    checkOwnerOfStore(msg.sender, _storeID)
+    returns(uint)
+  {
+    return stores[_storeID].balance;
+  }
+
 }

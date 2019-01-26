@@ -8,9 +8,9 @@ pragma solidity ^0.5.0;
  * Provides onlyOwner modifier, which prevents function from running if it is called by anyone other than the owner.
  */
 contract Ownable {
-  address payable public owner;
+  address payable internal owner;
 
-  constructor() public {
+  constructor() internal {
     owner = msg.sender;
   }
 
