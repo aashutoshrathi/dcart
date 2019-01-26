@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import MarketContract from "./contracts/Market.json";
 import getWeb3 from "./utils/getWeb3";
 import { Badge, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import "./App.css";
-import Home from "./components/Home";
-import Logo from "./assets/logo.png"
+import Store from "./components/Store";
+import Logo from "./assets/logo.png";
 
-const { Header } = Layout;
+const { Header, Footer } = Layout;
 
 var headerStyles = { position: "fixed", zIndex: 1, width: "100%" };
 class App extends Component {
@@ -32,9 +32,9 @@ class App extends Component {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = MarketContract.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        MarketContract.abi,
         deployedNetwork && deployedNetwork.address
       );
 
@@ -70,12 +70,25 @@ class App extends Component {
           <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
             <Menu.Item key="0">
               <div>
-                <img src={Logo} alt="D-Cart" className="logo"/>
+                <a href="/">
+                  <img src={Logo} alt="D-Cart" className="logo" />
+                </a>
               </div>
+            </Menu.Item>
+            <Menu.Item key="6">
+              {this.state.connected ? (
+                <div className="status">
+                  <a href="/stores">
+                    <b>Stores</b>
+                  </a>
+                </div>
+              ) : (
+                <div />
+              )}
             </Menu.Item>
             <Menu.Item key="1">
               {this.state.connected ? (
-                <div className="status">
+                <div onClick={this.fetchUserBalance()} className="status">
                   <b>Account:</b> {this.state.accounts[0]}
                 </div>
               ) : (
@@ -106,9 +119,29 @@ class App extends Component {
         </Header>
         <Router>
           <Switch>
-            <Route exact path="/" render={() => <Home {...this.state} />} />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Store
+                  {...this.state}
+                  updated={this.fetchUserBalance.bind(this)}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/stores"
+              render={() => (
+                <Store
+                  {...this.state}
+                  updated={this.fetchUserBalance.bind(this)}
+                />
+              )}
+            />
           </Switch>
         </Router>
+        <Footer style={{ textAlign: "center" }}>© DCart 2019</Footer>
       </Layout>
     );
   }

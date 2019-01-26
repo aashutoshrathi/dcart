@@ -8,3 +8,11 @@ html {
 .logo {
   width: 45px;
 }
+
+.status {
+  color: white;
+}
+
+.status a {
+  color: white;
+}

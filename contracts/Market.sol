@@ -39,6 +39,7 @@ contract Market is Ownable, Stoppable {
   event StoreAdded(address _owner, string _name, uint _skuCount);
   event StoreRemoved(address _user);
   event StoreBalanceWithdrawn(uint _storeID, uint balanceToWithdraw);
+  event ItemDeleted(uint _storeID, uint _sku);
 
   modifier verifyCaller (address _address) { 
     require (msg.sender == _address); 
@@ -78,6 +79,14 @@ contract Market is Ownable, Stoppable {
   constructor() public {
     // skuCount = 0;
   }
+  
+  function getStoreCount()
+    public
+    view
+    returns(uint)
+  {
+      return storeCount;
+  }
 
   function addItem(string memory _name, uint _price, uint _sku, uint _storeID) public 
     checkOwnerOfStore(msg.sender, _storeID)
@@ -89,6 +98,14 @@ contract Market is Ownable, Stoppable {
     stores[_storeID].storeItems[skuCount].price = _price;
     stores[_storeID].storeItems[skuCount].sku = _sku;
     emit ForSale(skuCount, _storeID, _name, _sku);
+  }
+
+  function deleteItem(uint _sku, uint _storeID) public 
+    checkOwnerOfStore(msg.sender, _storeID)
+    stopInEmergency()
+  {
+    delete stores[_storeID].storeItems[_sku];
+    emit ItemDeleted(_storeID, _sku);
   }
 
   function buyItem(uint _sku, uint _quantity, uint _storeID)
@@ -136,10 +153,10 @@ contract Market is Ownable, Stoppable {
     onlyOwner()
   {
     require(bytes(_name).length <= 20, "Please keep name under 20 charachters"); // This makes sure that we don't end up using infinite gas.
-    storeCount = SafeMath.add(storeCount, 1);
     stores[storeCount].storeName = _name;
     stores[storeCount].storeOwner = _storeOwner;
     stores[storeCount].storeSkuCount = _storeSkuCount;
+    storeCount = SafeMath.add(storeCount, 1);
     emit StoreAdded(_storeOwner, _name, _storeSkuCount);
   }
   
@@ -184,23 +201,29 @@ contract Market is Ownable, Stoppable {
   }
   
   
-  function fetchStore(uint _storeID)
+  function getStore(uint _storeID)
     public
     view
     checkStoreExistence(_storeID)
-    returns(string memory name)
+    returns(string memory name, address owner)
   {
-    return stores[_storeID].storeName;
+    Store memory store = stores[_storeID];
+    return (store.storeName, store.storeOwner);
   }
   
-  function fetchStoreBalance(uint _storeID)
+  function getStoreBalance(uint _storeID)
     public
-    payable
+    view
     stopInEmergency()
     checkOwnerOfStore(msg.sender, _storeID)
     returns(uint)
   {
     return stores[_storeID].balance;
+  }
+
+  // If nothing is mathced do this.
+  function() external {
+    revert();
   }
 
 }
