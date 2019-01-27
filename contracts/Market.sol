@@ -80,6 +80,14 @@ contract Market is Ownable, Stoppable {
     // skuCount = 0;
   }
   
+  function getStoreItemCount(uint _storeID)
+    public
+    view
+    returns(uint)
+  {
+      return stores[_storeID].storeSkuCount;
+  }
+  
   function getStoreCount()
     public
     view
@@ -94,6 +102,7 @@ contract Market is Ownable, Stoppable {
   {
     require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
     skuCount = SafeMath.add(skuCount, 1); // increase overall items count
+    stores[_storeID].storeSkuCount = SafeMath.add(stores[_storeID].storeSkuCount, 1); // increase overall items count
     stores[_storeID].storeItems[skuCount].name = _name;
     stores[_storeID].storeItems[skuCount].price = _price;
     stores[_storeID].storeItems[skuCount].sku = _sku;
@@ -136,7 +145,7 @@ contract Market is Ownable, Stoppable {
   function fetchItem(uint _sku, uint _storeID)
     stopInEmergency()
     public 
-    view 
+    view
     returns (string memory name, uint sku, uint price, uint state) 
   {
     Item memory item = stores[_storeID].storeItems[_sku];

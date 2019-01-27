@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Layout, Form, Input, List } from "antd";
+import { Button, Layout, Form, Input, List, Card } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
 
@@ -38,11 +38,11 @@ class Store extends Component {
     this.setState({ value: event.target.value });
   };
 
-  fetchStores() {
+  async fetchStores() {
     if (!this.props.contract) {
       return;
     }
-    let storeMap = {};
+    let stores = [];
     this.props.contract.methods
       .getStoreCount()
       .call()
@@ -52,18 +52,16 @@ class Store extends Component {
             .getStore(i)
             .call()
             .then(res => {
-              storeMap[i] = res[0];
+              stores[i] = {
+                storeID: i,
+                name: res[0],
+                owner: res[1]
+              };
               console.log(res);
             })
             .catch(console.error)
             .finally(() => {
-              let stores = [];
-              for (let i = num - 1; i >= 0; i--) {
-                if (i in storeMap) {
-                  stores.push(storeMap[i]);
-                }
-              }
-              this.setState({ stores });
+              this.setState({ stores: stores });
             });
         }
       })
@@ -102,15 +100,23 @@ class Store extends Component {
           <hr />
 
           <List
-            size="large"
+            size="default"
+            grid={{ gutter: 16, column: 3 }}
             header={
               <div>
-                <h3>Stores</h3>
+                <h3>
+                  <b>Stores</b>
+                </h3>
               </div>
             }
-            bordered
             dataSource={this.state.stores}
-            renderItem={item => <List.Item>{item}</List.Item>}
+            renderItem={item => (
+              <List.Item>
+                <a href={"/stores/" + item.storeID}>
+                  <Card title={item.name}>{item.owner}</Card>
+                </a>
+              </List.Item>
+            )}
           />
         </div>
       </Content>

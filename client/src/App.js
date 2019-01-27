@@ -7,6 +7,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import Store from "./components/Store";
 import Logo from "./assets/logo.png";
+import StoreItems from "./components/StoreItems.js";
 
 const { Header, Footer } = Layout;
 
@@ -14,7 +15,6 @@ var headerStyles = { position: "fixed", zIndex: 1, width: "100%" };
 class App extends Component {
   state = {
     connected: false,
-    storageValue: 0,
     web3: null,
     accounts: null,
     contract: null,
@@ -88,7 +88,7 @@ class App extends Component {
             </Menu.Item>
             <Menu.Item key="1">
               {this.state.connected ? (
-                <div onClick={this.fetchUserBalance()} className="status">
+                <div className="status">
                   <b>Account:</b> {this.state.accounts[0]}
                 </div>
               ) : (
@@ -97,8 +97,10 @@ class App extends Component {
             </Menu.Item>
             <Menu.Item key="2">
               {this.state.connected ? (
-                <div className="status">
-                  <b>Balance:</b> {this.state.currentBalance} ETH
+                <div onClick={this.fetchUserBalance()} className="status">
+                  <span>
+                    <b>Balance:</b> {this.state.currentBalance} ETH
+                  </span>
                 </div>
               ) : (
                 <div />
@@ -136,6 +138,17 @@ class App extends Component {
                 <Store
                   {...this.state}
                   updated={this.fetchUserBalance.bind(this)}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/stores/:storeID"
+              render={({match}) => (
+                <StoreItems
+                  {...this.state}
+                  updated={this.fetchUserBalance.bind(this)}
+                  storeID={match.params.storeID}
                 />
               )}
             />
