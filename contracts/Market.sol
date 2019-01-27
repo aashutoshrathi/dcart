@@ -11,6 +11,11 @@ contract Market is Ownable, Stoppable {
   
   // for circuit breaker
   bool public stopped = false;
+  
+  struct User{
+    string name;
+    mapping(uint => mapping(uint => uint)) orders;
+  }
 
   struct Store {
     address payable storeOwner;
@@ -20,18 +25,16 @@ contract Market is Ownable, Stoppable {
     mapping (uint=>Item) storeItems;
   }
 
-  enum State {ItemForSale, Sold, Shipped, Recieved}
 
   struct Item {
     string name;
     uint sku;
     uint price;
-    State state;
   }
 
   mapping(uint => Store) public stores;
   mapping(address => bool) public isAdmin;
-
+  mapping(address => User) public people;
   event ForSale(uint _sku, uint _storeID, string _name, uint _quantity);
   event Sold(uint _sku, uint _storeID, uint _quantity);
   event AdminAdded(address _user);
@@ -65,17 +68,7 @@ contract Market is Ownable, Stoppable {
     require(_quantity <= stores[_storeID].storeItems[_itemCode].sku, "Not sufficient quantity available");
     _;
   }
-
-  modifier ItemForSale(uint _sku, uint _storeID) {
-    require(stores[_storeID].storeItems[_sku].state == State.ItemForSale, "Item not for sale :(");
-    _;
-  }
-
-  modifier sold(uint _sku, uint _storeID) {
-    require(stores[_storeID].storeItems[_sku].state == State.Sold, "Error selling item.");
-    _;
-  }
-
+  
   constructor() public {
     // skuCount = 0;
   }
@@ -101,11 +94,12 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
   {
     require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
-    skuCount = SafeMath.add(skuCount, 1); // increase overall items count
-    stores[_storeID].storeSkuCount = SafeMath.add(stores[_storeID].storeSkuCount, 1); // increase overall items count
-    stores[_storeID].storeItems[skuCount].name = _name;
-    stores[_storeID].storeItems[skuCount].price = _price;
-    stores[_storeID].storeItems[skuCount].sku = _sku;
+    skuCount = SafeMath.add(skuCount, 1);
+    uint count = stores[_storeID].storeSkuCount; // increase overall items count
+    stores[_storeID].storeItems[count].name = _name;
+    stores[_storeID].storeItems[count].price = _price;
+    stores[_storeID].storeItems[count].sku = _sku;
+    stores[_storeID].storeSkuCount = SafeMath.add(count, 1); // increase overall items count
     emit ForSale(skuCount, _storeID, _name, _sku);
   }
 
@@ -121,12 +115,12 @@ contract Market is Ownable, Stoppable {
     public
     payable
     stopInEmergency()
-    ItemForSale(_sku, _storeID)
     paidEnough(SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity))
   {
     uint transactAmount = SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity);
     stores[_storeID].storeItems[_sku].sku = SafeMath.sub(stores[_storeID].storeItems[_sku].sku,  _quantity);
     stores[_storeID].balance = SafeMath.add(stores[_storeID].balance, transactAmount);
+    people[msg.sender].orders[_storeID][_sku] =SafeMath.add(people[msg.sender].orders[_storeID][_sku], _quantity);
     emit Sold(_sku, _storeID, _quantity);
   }
   
@@ -146,20 +140,18 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
     public 
     view
-    returns (string memory name, uint sku, uint price, uint state) 
+    returns (string memory name, uint sku, uint price) 
   {
     Item memory item = stores[_storeID].storeItems[_sku];
     name = item.name;
     sku = item.sku;
     price = item.price;
-    state = uint(item.state);
-    return (name, sku, price, state);
+    return (name, sku, price);
   }
 
   function addStore(string memory _name, address payable _storeOwner, uint _storeSkuCount) 
     public
     stopInEmergency()
-    onlyOwner()
   {
     require(bytes(_name).length <= 20, "Please keep name under 20 charachters"); // This makes sure that we don't end up using infinite gas.
     stores[storeCount].storeName = _name;
