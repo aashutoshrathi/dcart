@@ -19543,10 +19543,16 @@
       "links": {},
       "address": "0xc86014505f09d6CE04dD3127e39b7BE9C19232C3",
       "transactionHash": "0x1ecca06a8cf28fcd8955088a6a92f2ae4e1fda310d18b459f9dcddde6ef06d5e"
+    },
+    "1548592362601": {
+      "events": {},
+      "links": {},
+      "address": "0x5772d6a29F861aeB28655Bbf31C546B6fcDc3176",
+      "transactionHash": "0xbc71ea111763b9020c964afff0ac0f6fe504b704aadf67fff77fc3245833a534"
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-27T12:27:05.806Z",
+  "updatedAt": "2019-01-27T12:34:02.240Z",
   "devdoc": {
     "methods": {}
   },
