@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Button, Layout, Form, Input, List, Card } from "antd";
 import "antd/dist/antd.css";
+import { Link } from "react-router-dom";
 const { Content } = Layout;
 
 class Store extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = { loading: false, value: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -112,9 +112,9 @@ class Store extends Component {
             dataSource={this.state.stores}
             renderItem={item => (
               <List.Item>
-                <a href={"/stores/" + item.storeID}>
+                <Link to={`/stores/${item.storeID}`}>
                   <Card title={item.name}>{item.owner}</Card>
-                </a>
+                </Link>
               </List.Item>
             )}
           />

@@ -1,7 +1,7 @@
 // List all items of store
 // Add Item button for owner and buy for everyone else.
 import React, { Component } from "react";
-import { Layout, List, Card } from "antd";
+import { Layout, List, Card, Modal, Button } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
 
@@ -9,17 +9,54 @@ class StoreItems extends Component {
   constructor(props) {
     super(props);
     console.log(props);
-    this.state = { loading: false, value: "" };
+    this.state = {
+      loading: false,
+      name: "",
+      price: "",
+      quantity: "",
+      visible: false,
+      storeName: "",
+      isOwner: false
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchItems(this.props.storeID);
+  showModal = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  addItem = event => {
+    console.log("Added");
+  };
+
+  async componentDidMount() {
+    this.fetchItems();
+    if (!this.props.contract) {
+      console.log("No contract found");
+      return;
+    }
+    this.props.contract.methods
+      .getStore(this.props.storeID)
+      .call()
+      .then(res =>
+        this.setState({
+          storeName: res[0],
+          isOwner: res[1] === this.props.accounts[0]
+        })
+      );
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.contract) {
-      this.fetchItems(this.props.storeID);
+      this.fetchItems();
     }
   }
 
@@ -71,6 +108,25 @@ class StoreItems extends Component {
               <div>
                 <h3>
                   <b>Items</b>
+                  {this.state.isOwner ? (
+                    <div className="addItem">
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        onClick={this.showModal}
+                      >
+                        Add Item
+                      </Button>
+                      <Modal
+                        title={"Add Item to " + this.state.storeName}
+                        visible={this.state.visible}
+                        onOk={this.addItem}
+                        onCancel={this.handleCancel}
+                      />
+                    </div>
+                  ) : (
+                    <div />
+                  )}
                 </h3>
               </div>
             }

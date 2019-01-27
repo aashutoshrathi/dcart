@@ -26,10 +26,10 @@ class App extends Component {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
+      console.log(web3);
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = MarketContract.networks[networkId];
@@ -144,7 +144,7 @@ class App extends Component {
             <Route
               exact
               path="/stores/:storeID"
-              render={({match}) => (
+              render={({ match }) => (
                 <StoreItems
                   {...this.state}
                   updated={this.fetchUserBalance.bind(this)}
