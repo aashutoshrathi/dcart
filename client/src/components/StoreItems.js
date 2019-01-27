@@ -1,7 +1,7 @@
 // List all items of store
 // Add Item button for owner and buy for everyone else.
 import React, { Component } from "react";
-import { Layout, List, Card, Modal, Button } from "antd";
+import { Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
 
@@ -122,7 +122,11 @@ class StoreItems extends Component {
                         visible={this.state.visible}
                         onOk={this.addItem}
                         onCancel={this.handleCancel}
-                      />
+                      >
+                        <Input placeholder="Item Name" />
+                        <Input placeholder="Item Price" />
+                        <Input placeholder="Item Quantity" />
+                      </Modal>
                     </div>
                   ) : (
                     <div />
