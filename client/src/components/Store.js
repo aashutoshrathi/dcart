@@ -26,7 +26,7 @@ class Store extends Component {
     this.setState({ loading: true });
     const { accounts, contract } = this.props;
     var name = this.state.value;
-    console.log(name);
+    // console.log(name);
     await contract.methods
       .addStore(name, accounts[0], 0)
       .send({ from: accounts[0] });
@@ -57,7 +57,7 @@ class Store extends Component {
                 name: res[0],
                 owner: res[1]
               };
-              console.log(res);
+              // console.log(res);
             })
             .catch(console.error)
             .finally(() => {

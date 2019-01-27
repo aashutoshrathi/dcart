@@ -4,11 +4,13 @@ import React, { Component } from "react";
 import { Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
+const { Meta } = Card;
+const InputGroup = Input.Group;
 
 class StoreItems extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    // console.log(props);
     this.state = {
       loading: false,
       name: "",
@@ -16,7 +18,8 @@ class StoreItems extends Component {
       quantity: "",
       visible: false,
       storeName: "",
-      isOwner: false
+      isOwner: false,
+      items: []
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -34,42 +37,62 @@ class StoreItems extends Component {
   };
 
   addItem = event => {
-    console.log("Added");
+    const { accounts, contract, storeID } = this.props;
+    const { name, price, quantity } = this.state;
+    contract.methods
+      .addItem(name, price, quantity, storeID)
+      .send({ from: accounts[0] });
+    this.setState({ loading: false, value: "", visible: false });
+    this.fetchItems();
   };
 
-  async componentDidMount() {
-    this.fetchItems();
+  componentDidMount() {
     if (!this.props.contract) {
       console.log("No contract found");
       return;
     }
+    console.log(this.props);
     this.props.contract.methods
       .getStore(this.props.storeID)
       .call()
-      .then(res =>
+      .then(res => {
+        console.log(res);
         this.setState({
           storeName: res[0],
           isOwner: res[1] === this.props.accounts[0]
-        })
-      );
+        });
+      });
+    this.fetchItems();
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.contract) {
       this.fetchItems();
+      this.props.contract.methods
+        .getStore(this.props.storeID)
+        .call()
+        .then(res => {
+          console.log(res);
+          this.setState({
+            storeName: res[0],
+            isOwner: res[1] === this.props.accounts[0]
+          });
+        });
     }
   }
 
   handleChange = event => {
-    this.setState({ value: event.target.value });
+    this.setState({ [event.target.name]: event.target.value });
+    // console.log(this.state);
   };
 
-  async fetchItems() {
+  fetchItems = () => {
     if (!this.props.contract) {
       return;
     }
     var storeID = this.props.storeID;
     let items = [];
+    let finalItems = [];
     this.props.contract.methods
       .getStoreItemCount(storeID)
       .call()
@@ -83,18 +106,18 @@ class StoreItems extends Component {
                 name: res[0],
                 quantity: res[1],
                 price: res[2],
-                state: res[3]
+                status: res[3]
               };
-              console.log(res);
             })
             .catch(console.error)
             .finally(() => {
-              this.setState({ items: items });
+              finalItems.push(items[i]);
             });
         }
+        this.setState({ items: finalItems });
       })
       .catch(console.error);
-  }
+  };
 
   render() {
     return (
@@ -107,7 +130,7 @@ class StoreItems extends Component {
             header={
               <div>
                 <h3>
-                  <b>Items</b>
+                  <b>{this.state.storeName}</b>
                   {this.state.isOwner ? (
                     <div className="addItem">
                       <Button
@@ -123,9 +146,23 @@ class StoreItems extends Component {
                         onOk={this.addItem}
                         onCancel={this.handleCancel}
                       >
-                        <Input placeholder="Item Name" />
-                        <Input placeholder="Item Price" />
-                        <Input placeholder="Item Quantity" />
+                        <InputGroup>
+                          <Input
+                            name="name"
+                            onChange={this.handleChange}
+                            placeholder="Item Name"
+                          />
+                          <Input
+                            name="price"
+                            onChange={this.handleChange}
+                            placeholder="Item Price"
+                          />
+                          <Input
+                            name="quantity"
+                            onChange={this.handleChange}
+                            placeholder="Item Quantity"
+                          />
+                        </InputGroup>
                       </Modal>
                     </div>
                   ) : (
@@ -137,7 +174,9 @@ class StoreItems extends Component {
             dataSource={this.state.items}
             renderItem={item => (
               <List.Item>
-                <Card title={item.name}>{item.owner}</Card>
+                <Card>
+                  <Meta title={item.name} description={`${item.price} wei`} />
+                </Card>
               </List.Item>
             )}
           />

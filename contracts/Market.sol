@@ -101,11 +101,12 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
   {
     require(bytes(_name).length <= 20, "Please keep name under 20 chars"); // This makes sure that we don't end up using infinite gas
-    skuCount = SafeMath.add(skuCount, 1); // increase overall items count
-    stores[_storeID].storeSkuCount = SafeMath.add(stores[_storeID].storeSkuCount, 1); // increase overall items count
-    stores[_storeID].storeItems[skuCount].name = _name;
-    stores[_storeID].storeItems[skuCount].price = _price;
-    stores[_storeID].storeItems[skuCount].sku = _sku;
+    skuCount = SafeMath.add(skuCount, 1);
+    uint count = stores[_storeID].storeSkuCount; // increase overall items count
+    stores[_storeID].storeItems[count].name = _name;
+    stores[_storeID].storeItems[count].price = _price;
+    stores[_storeID].storeItems[count].sku = _sku;
+    stores[_storeID].storeSkuCount = SafeMath.add(count, 1); // increase overall items count
     emit ForSale(skuCount, _storeID, _name, _sku);
   }
 
