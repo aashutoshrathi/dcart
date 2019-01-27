@@ -8,6 +8,7 @@ import "./App.css";
 import Store from "./components/Store";
 import Logo from "./assets/logo.png";
 import StoreItems from "./components/StoreItems.js";
+import Orders from "./components/Orders.js";
 
 const { Header, Footer } = Layout;
 
@@ -74,6 +75,17 @@ class App extends Component {
                   <img src={Logo} alt="D-Cart" className="logo" />
                 </a>
               </div>
+            </Menu.Item>
+            <Menu.Item key="7">
+              {this.state.connected ? (
+                <div className="status">
+                  <a href="/orders">
+                    <b>Your Orders</b>
+                  </a>
+                </div>
+              ) : (
+                <div />
+              )}
             </Menu.Item>
             <Menu.Item key="6">
               {this.state.connected ? (
@@ -149,6 +161,16 @@ class App extends Component {
                   {...this.state}
                   updated={this.fetchUserBalance.bind(this)}
                   storeID={match.params.storeID}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/orders"
+              render={() => (
+                <Orders
+                  {...this.state}
+                  updated={this.fetchUserBalance.bind(this)}
                 />
               )}
             />

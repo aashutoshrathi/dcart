@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
-const { Meta } = Card;
 const InputGroup = Input.Group;
 
 class StoreItems extends Component {
@@ -19,7 +18,8 @@ class StoreItems extends Component {
       visible: false,
       storeName: "",
       isOwner: false,
-      items: []
+      items: [],
+      storeBalance: 0
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -48,15 +48,15 @@ class StoreItems extends Component {
 
   componentDidMount() {
     if (!this.props.contract) {
-      console.log("No contract found");
+      // console.log("No contract found");
       return;
     }
-    console.log(this.props);
+    // console.log(this.props);
     this.props.contract.methods
       .getStore(this.props.storeID)
       .call()
       .then(res => {
-        console.log(res);
+        // console.log(res);
         this.setState({
           storeName: res[0],
           isOwner: res[1] === this.props.accounts[0]
@@ -72,11 +72,16 @@ class StoreItems extends Component {
         .getStore(this.props.storeID)
         .call()
         .then(res => {
-          console.log(res);
-          this.setState({
-            storeName: res[0],
-            isOwner: res[1] === this.props.accounts[0]
-          });
+          // console.log(res);
+          this.setState(
+            {
+              storeName: res[0],
+              isOwner: res[1] === this.props.accounts[0]
+            },
+            this.props.accounts[0] === res[1]
+              ? this.getStoreBalance()
+              : console.log("Not owner")
+          );
         });
     }
   }
@@ -84,6 +89,28 @@ class StoreItems extends Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
     // console.log(this.state);
+  };
+
+  buyItem = (itemIndex, price) => {
+    // console.log(itemIndex, this.props.storeID);
+    this.props.contract.methods
+      .buyItem(itemIndex, 1, this.props.storeID)
+      .send({ from: this.props.accounts[0], value: price });
+    this.fetchItems();
+  };
+
+  getStoreBalance = () => {
+    let balance = 0;
+    this.props.contract.methods
+      .getStoreBalance(this.props.storeID)
+      .call()
+      .then(bal => {
+        console.log(this.props.storeID);
+        balance = bal;
+      })
+      .then(() => {
+        this.setState({ storeBalance: balance });
+      });
   };
 
   fetchItems = () => {
@@ -102,11 +129,12 @@ class StoreItems extends Component {
             .fetchItem(i, storeID)
             .call()
             .then(res => {
+              // console.log(res)
               items[i] = {
+                index: i,
                 name: res[0],
                 quantity: res[1],
-                price: res[2],
-                status: res[3]
+                price: res[2]
               };
             })
             .catch(console.error)
@@ -164,6 +192,10 @@ class StoreItems extends Component {
                           />
                         </InputGroup>
                       </Modal>
+                      <p>
+                        <b>Store Balance: </b>
+                        {this.state.storeBalance} wei
+                      </p>
                     </div>
                   ) : (
                     <div />
@@ -174,8 +206,18 @@ class StoreItems extends Component {
             dataSource={this.state.items}
             renderItem={item => (
               <List.Item>
-                <Card>
-                  <Meta title={item.name} description={`${item.price} wei`} />
+                <Card title={item.name}>
+                  <b>Price:</b> {item.price} wei
+                  <br />
+                  <b>Quantity:</b> {item.quantity} sku
+                  <br />
+                  <Button
+                    onClick={() => this.buyItem(item.index, item.price)}
+                    type="primary"
+                    disabled={item.quantity === "0" || item.quantity === 0}
+                  >
+                    Buy
+                  </Button>
                 </Card>
               </List.Item>
             )}

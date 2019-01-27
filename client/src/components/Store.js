@@ -21,7 +21,6 @@ class Store extends Component {
       this.fetchStores();
     }
   }
-
   async handleSubmit(event) {
     this.setState({ loading: true });
     const { accounts, contract } = this.props;
