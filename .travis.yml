@@ -15,7 +15,7 @@ install:
   - npm install
 
 script:
-  - npm i -g truffle
+  - npm i
   - cd client && npm i
   - cd ..
   - truffle test

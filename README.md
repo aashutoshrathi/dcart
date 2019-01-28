@@ -22,14 +22,13 @@ Plus, since we are not taking any data, all your purchase history will be yours 
 
 <img src="./assets/init-permissions.png" align="center" width="300">
 
-
-#### External Contracts Used
+#### External Contracts Used :bookmark_tabs:
 
 - [Stoppable](contracts/Stoppable.sol)
 - [SafeMath](contracts/SafeMath.sol)
 - [Ownable](contracts/Ownable.sol)
 
-## Development
+## Development :hammer_and_wrench:
 
 #### Prerequisites
 
@@ -102,7 +101,6 @@ npm run start
 truffle test
 ```
 
-Screenshot:
 <img src="./assets/test-snap.png" align="center" width="650">
 
 ---
