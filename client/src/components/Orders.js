@@ -20,44 +20,52 @@ class Orders extends Component {
       // console.log("No contract found");
       return;
     }
+    this.fetchOrders();
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.contract) {
+      this.fetchOrders();
     }
   }
 
-  fetchOrders = () => {
+  fetchOrders = async () => {
     if (!this.props.contract) {
       return;
     }
-    var storeID = this.props.storeID;
     let items = [];
-    let finalItems = [];
-    this.props.contract.methods
-      .getStoreItemCount(storeID)
-      .call()
-      .then(num => {
-        for (let i = num - 1; i >= 0; i--) {
-          this.props.contract.methods
-            .fetchItem(i, storeID)
-            .call()
-            .then(res => {
-              items[i] = {
-                index: i,
-                name: res[0],
-                quantity: res[1],
-                price: res[2]
-              };
-            })
-            .catch(console.error)
-            .finally(() => {
-              finalItems.push(items[i]);
-            });
+    let num = await this.props.contract.methods.getStoreCount().call();
+    // console.log("No. of stores:", num);
+    let itemCount = [];
+    let count = 0;
+    for (let i = num - 1; i >= 0; i--) {
+      var storeName = await this.props.contract.methods.getStore(i).call();
+      storeName = storeName[0];
+      // console.log(storeName);
+      itemCount[i] = await this.props.contract.methods
+        .getStoreItemCount(i)
+        .call();
+      for (let j = itemCount[i] - 1; j >= 0; j--) {
+        let fin = await this.props.contract.methods
+          .getOrderDetails(i, j)
+          .call();
+        let itemName = await this.props.contract.methods.fetchItem(j, i).call();
+        // console.log(itemName);
+        if ((fin[0] === 0 || fin[0] === "0")) {
+          items[count] = {
+            key: count,
+            name: itemName[0],
+            quantity: fin[0],
+            price: fin[1] + " wei",
+            total: fin[1] * fin[0] + " wei",
+            store: storeName
+          };
         }
-        this.setState({ items: finalItems });
-      })
-      .catch(console.error);
+        count++;
+      }
+    }
+    // console.log(items);
+    this.setState({ items: items });
   };
 
   columns = [
@@ -72,30 +80,19 @@ class Orders extends Component {
       key: "store"
     },
     {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount"
-    }
-  ];
-
-  data = [
-    {
-      key: "1",
-      name: "John Brown",
-      amount: 32,
-      store: "New York No. 1 Lake Park"
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity"
     },
     {
-      key: "2",
-      name: "Jim Green",
-      amount: 42,
-      store: "London No. 1 Lake Park"
+      title: "Price",
+      dataIndex: "price",
+      key: "price"
     },
     {
-      key: "3",
-      name: "Joe Black",
-      amount: 32,
-      store: "Sidney No. 1 Lake Park"
+      title: "Total",
+      dataIndex: "total",
+      key: "total"
     }
   ];
 
@@ -104,7 +101,7 @@ class Orders extends Component {
       <Content style={{ padding: "0 50px", marginTop: 64 }}>
         <br />
         <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
-          <Table columns={this.columns} dataSource={this.data} />
+          <Table columns={this.columns} dataSource={this.state.items} />
         </div>
       </Content>
     );

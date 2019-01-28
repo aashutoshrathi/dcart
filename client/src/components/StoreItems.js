@@ -16,6 +16,7 @@ class StoreItems extends Component {
       price: "",
       quantity: "",
       visible: false,
+      buying: false,
       storeName: "",
       isOwner: false,
       items: [],
@@ -36,13 +37,14 @@ class StoreItems extends Component {
     });
   };
 
-  addItem = event => {
+  addItem = async (event) => {
+    this.setState({loading: true, visible: false});
     const { accounts, contract, storeID } = this.props;
     const { name, price, quantity } = this.state;
-    contract.methods
+    await contract.methods
       .addItem(name, price, quantity, storeID)
       .send({ from: accounts[0] });
-    this.setState({ loading: false, value: "", visible: false });
+    this.setState({ loading: false, value: ""});
     this.fetchItems();
   };
 
@@ -91,11 +93,13 @@ class StoreItems extends Component {
     // console.log(this.state);
   };
 
-  buyItem = (itemIndex, price) => {
+  buyItem = async (itemIndex, price) => {
     // console.log(itemIndex, this.props.storeID);
-    this.props.contract.methods
+    this.setState({buying:true});
+    await this.props.contract.methods
       .buyItem(itemIndex, 1, this.props.storeID)
       .send({ from: this.props.accounts[0], value: price });
+    this.setState({buying:false});
     this.fetchItems();
   };
 
@@ -163,10 +167,10 @@ class StoreItems extends Component {
         <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
           <List
             size="default"
-            grid={{ gutter: 16, column: 3 }}
+            grid={{ gutter: 14, column: 3 }}
             header={
               <div>
-                <Row gutter={4}>
+                <Row gutter={3}>
                   <Col xs={2} sm={4} md={6} lg={8} xl={10}>
                     <h3>
                       <b>{this.state.storeName}</b>
@@ -186,6 +190,7 @@ class StoreItems extends Component {
                           type="primary"
                           htmlType="submit"
                           onClick={this.showModal}
+                          loading={this.state.loading}
                         >
                           Add Item
                         </Button>
@@ -239,13 +244,18 @@ class StoreItems extends Component {
                   <br />
                   <b>Quantity:</b> {item.quantity} sku
                   <br />
-                  <Button
-                    onClick={() => this.buyItem(item.index, item.price)}
-                    type="primary"
-                    disabled={item.quantity === "0" || item.quantity === 0}
-                  >
-                    Buy
-                  </Button>
+                  {this.state.isOwner ? (
+                    <span />
+                  ) : (
+                    <Button
+                      onClick={() => this.buyItem(item.index, item.price)}
+                      type="primary"
+                      disabled={item.quantity === "0" || item.quantity === 0}
+                      loading={this.state.buying}
+                    >
+                      {this.state.buying?"Buying":"Buy"}
+                    </Button>
+                  )}
                 </Card>
               </List.Item>
             )}

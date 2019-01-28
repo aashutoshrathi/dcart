@@ -97,8 +97,7 @@ contract Market is Ownable, Stoppable {
     view
     returns(uint, uint)
   {
-    address user = msg.sender;
-    uint quantity = people[user].orders[_storeID][_itemCode];
+    uint quantity = people[msg.sender].orders[_storeID][_itemCode];
     uint price = stores[_storeID].storeItems[_itemCode].price;
     return(quantity, price);
   }
@@ -134,7 +133,7 @@ contract Market is Ownable, Stoppable {
     uint transactAmount = SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity);
     stores[_storeID].storeItems[_sku].sku = SafeMath.sub(stores[_storeID].storeItems[_sku].sku,  _quantity);
     stores[_storeID].storeBalance = SafeMath.add(stores[_storeID].storeBalance, transactAmount);
-    people[msg.sender].orders[_storeID][_sku] =SafeMath.add(people[msg.sender].orders[_storeID][_sku], _quantity);
+    people[msg.sender].orders[_storeID][_sku] = SafeMath.add(people[msg.sender].orders[_storeID][_sku], _quantity);
     emit Sold(_sku, _storeID, _quantity);
   }
   
@@ -220,10 +219,10 @@ contract Market is Ownable, Stoppable {
     public
     view
     checkStoreExistence(_storeID)
-    returns(string memory name, address owner)
+    returns(string memory, address, uint)
   {
     Store memory store = stores[_storeID];
-    return (store.storeName, store.storeOwner);
+    return (store.storeName, store.storeOwner, store.storeSkuCount);
   }
   
   function getStoreBalance(uint _storeID)

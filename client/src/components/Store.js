@@ -54,7 +54,8 @@ class Store extends Component {
               stores[i] = {
                 storeID: i,
                 name: res[0],
-                owner: res[1]
+                owner: res[1],
+                quant: res[2]
               };
               // console.log(res);
             })
@@ -109,10 +110,10 @@ class Store extends Component {
               </div>
             }
             dataSource={this.state.stores}
-            renderItem={item => (
+            renderItem={store => (
               <List.Item>
-                <Link to={`/stores/${item.storeID}`}>
-                  <Card title={item.name}>{item.owner}</Card>
+                <Link to={`/stores/${store.storeID}`}>
+                  <Card title={store.name}><b>Items Available: </b> {store.quant}</Card>
                 </Link>
               </List.Item>
             )}
