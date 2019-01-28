@@ -73,7 +73,7 @@ contract Market is Ownable, Stoppable {
   }
   
   constructor() public {
-    // skuCount = 0;
+    isAdmin[owner] = true;
   }
   
   function getStoreItemCount(uint _storeID)

@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Row, Col, Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
-const InputGroup = Input.Group;
 
 class StoreItems extends Component {
   constructor(props) {
@@ -37,14 +36,14 @@ class StoreItems extends Component {
     });
   };
 
-  addItem = async (event) => {
-    this.setState({loading: true, visible: false});
+  addItem = async event => {
+    this.setState({ loading: true, visible: false });
     const { accounts, contract, storeID } = this.props;
     const { name, price, quantity } = this.state;
     await contract.methods
       .addItem(name, price, quantity, storeID)
       .send({ from: accounts[0] });
-    this.setState({ loading: false, value: ""});
+    this.setState({ loading: false, value: "" });
     this.fetchItems();
   };
 
@@ -95,11 +94,11 @@ class StoreItems extends Component {
 
   buyItem = async (itemIndex, price) => {
     // console.log(itemIndex, this.props.storeID);
-    this.setState({buying:true});
+    this.setState({ buying: true });
     await this.props.contract.methods
       .buyItem(itemIndex, 1, this.props.storeID)
       .send({ from: this.props.accounts[0], value: price });
-    this.setState({buying:false});
+    this.setState({ buying: false });
     this.fetchItems();
   };
 
@@ -211,12 +210,13 @@ class StoreItems extends Component {
                         onOk={this.addItem}
                         onCancel={this.handleCancel}
                       >
-                        <InputGroup>
+                        <div>
                           <Input
                             name="name"
                             onChange={this.handleChange}
                             placeholder="Item Name"
                           />
+                          <br />
                           <br />
                           <Input
                             name="price"
@@ -224,12 +224,13 @@ class StoreItems extends Component {
                             placeholder="Item Price"
                           />
                           <br />
+                          <br />
                           <Input
                             name="quantity"
                             onChange={this.handleChange}
                             placeholder="Item Quantity"
                           />
-                        </InputGroup>
+                        </div>
                       </Modal>
                     </div>
                   ) : (
@@ -255,7 +256,7 @@ class StoreItems extends Component {
                       disabled={item.quantity === "0" || item.quantity === 0}
                       loading={this.state.buying}
                     >
-                      {this.state.buying?"Buying":"Buy"}
+                      {this.state.buying ? "Buying" : "Buy"}
                     </Button>
                   )}
                 </Card>

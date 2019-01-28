@@ -113,7 +113,9 @@ class Store extends Component {
             renderItem={store => (
               <List.Item>
                 <Link to={`/stores/${store.storeID}`}>
-                  <Card title={store.name}><b>Items Available: </b> {store.quant}</Card>
+                  <Card title={store.name}>
+                    <b>Items Available: </b> {store.quant}
+                  </Card>
                 </Link>
               </List.Item>
             )}

@@ -51,7 +51,7 @@ class Orders extends Component {
           .call();
         let itemName = await this.props.contract.methods.fetchItem(j, i).call();
         // console.log(itemName);
-        if ((fin[0] === 0 || fin[0] === "0")) {
+        if (fin[0] === 0 || fin[0] === "0") {
           items[count] = {
             key: count,
             name: itemName[0],

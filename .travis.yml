@@ -1,6 +1,6 @@
 branches:
   only:
-    - deploy-rinkeby
+    - master
 
 language: node_js
 
