@@ -217,11 +217,13 @@ class StoreItems extends Component {
                             onChange={this.handleChange}
                             placeholder="Item Name"
                           />
+                          <br />
                           <Input
                             name="price"
                             onChange={this.handleChange}
                             placeholder="Item Price"
                           />
+                          <br />
                           <Input
                             name="quantity"
                             onChange={this.handleChange}
