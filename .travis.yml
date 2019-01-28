@@ -16,8 +16,8 @@ install:
 
 script:
   - cd client && npm i
+  - cd ..
   - truffle test
-  - truffle migrate --network rinkeby --reset
 
 after_success: |
   if [ -n "$GITHUB_API_KEY" ]; then
