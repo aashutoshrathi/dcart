@@ -22,6 +22,22 @@ Plus, since we are not taking any data, all your purchase history will be yours 
 
 <img src="./assets/init-permissions.png" align="center" width="300">
 
+|         Main Page         |         Adding Store         |
+| :-----------------------: | :--------------------------: |
+| ![](assets/main-page.png) | ![](assets/adding-store.png) |
+
+|         Store Added         |        Store Page         |
+| :-------------------------: | :-----------------------: |
+| ![](assets/store-added.png) | ![](assets/shop-init.png) |
+
+|          Add Item Form           |         Item Added         |
+| :------------------------------: | :------------------------: |
+| ![](assets/adding-item-form.png) | ![](assets/item-added.png) |
+
+| Buying from another account |    Store after transactions     |
+| :-------------------------: | :-----------------------------: |
+| ![](assets/buying-item.png) | ![](assets/store-after-buy.png) |
+
 #### External Contracts Used :bookmark_tabs:
 
 - [Stoppable](contracts/Stoppable.sol)
