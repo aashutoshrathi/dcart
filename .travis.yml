@@ -12,12 +12,14 @@ cache:
     - node_modules
 
 install:
-  - npm install
+  - npm i -g ganache-cli
+  - npm i
 
 script:
-  - npm i
   - cd client && npm i
   - cd ..
+  - ganache-cli &
+  - sleep 5
   - truffle test
 
 after_success: |
