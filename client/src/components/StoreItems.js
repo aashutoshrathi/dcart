@@ -1,7 +1,7 @@
 // List all items of store
 // Add Item button for owner and buy for everyone else.
 import React, { Component } from "react";
-import { Layout, List, Card, Modal, Button, Input } from "antd";
+import { Row, Col, Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
 const { Content } = Layout;
 const InputGroup = Input.Group;
@@ -105,12 +105,21 @@ class StoreItems extends Component {
       .getStoreBalance(this.props.storeID)
       .call()
       .then(bal => {
-        console.log(this.props.storeID);
+        // console.log(this.props.storeID);
         balance = bal;
       })
       .then(() => {
         this.setState({ storeBalance: balance });
       });
+  };
+
+  withdrawBalance = () => {
+    var curBalance = this.state.storeBalance;
+    console.log(curBalance);
+    this.props.contract.methods
+      .withdrawStoreBalance(this.props.storeID, curBalance)
+      .send({ from: this.props.accounts[0] });
+    this.getStoreBalance();
   };
 
   fetchItems = () => {
@@ -157,17 +166,40 @@ class StoreItems extends Component {
             grid={{ gutter: 16, column: 3 }}
             header={
               <div>
-                <h3>
-                  <b>{this.state.storeName}</b>
+                <Row gutter={4}>
+                  <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+                    <h3>
+                      <b>{this.state.storeName}</b>
+                    </h3>
+                  </Col>
+
                   {this.state.isOwner ? (
                     <div className="addItem">
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        onClick={this.showModal}
-                      >
-                        Add Item
-                      </Button>
+                      <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+                        <p>
+                          <b>Store Balance: </b>
+                          {this.state.storeBalance} wei
+                        </p>
+                      </Col>
+                      <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          onClick={this.showModal}
+                        >
+                          Add Item
+                        </Button>
+                      </Col>
+                      <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+                        <Button
+                          type="danger"
+                          ghost
+                          htmlType="submit"
+                          onClick={() => this.withdrawBalance()}
+                        >
+                          Withdraw Balance
+                        </Button>
+                      </Col>
                       <Modal
                         title={"Add Item to " + this.state.storeName}
                         visible={this.state.visible}
@@ -192,15 +224,11 @@ class StoreItems extends Component {
                           />
                         </InputGroup>
                       </Modal>
-                      <p>
-                        <b>Store Balance: </b>
-                        {this.state.storeBalance} wei
-                      </p>
                     </div>
                   ) : (
                     <div />
                   )}
-                </h3>
+                </Row>
               </div>
             }
             dataSource={this.state.items}

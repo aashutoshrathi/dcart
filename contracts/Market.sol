@@ -15,13 +15,14 @@ contract Market is Ownable, Stoppable {
   struct User{
     string name;
     mapping(uint => mapping(uint => uint)) orders;
+    // storeID => itemID => quantity
   }
 
   struct Store {
     address payable storeOwner;
     string storeName;
     uint storeSkuCount;
-    uint balance;
+    uint storeBalance;
     mapping (uint=>Item) storeItems;
   }
 
@@ -55,7 +56,9 @@ contract Market is Ownable, Stoppable {
   }
 
   modifier checkOwnerOfStore(address _storeOwner, uint _storeID) {
-    require (_storeOwner == stores[_storeID].storeOwner, "You don't Permissions to temper with someone else's store");
+    // Why I removed fallback string?
+    // https://github.com/ethereum/solidity/issues/3971
+    require (_storeOwner == stores[_storeID].storeOwner);
     _;
   }
 
@@ -88,6 +91,17 @@ contract Market is Ownable, Stoppable {
   {
       return storeCount;
   }
+  
+  function getOrderDetails(uint _storeID, uint _itemCode)
+    public
+    view
+    returns(uint, uint)
+  {
+    address user = msg.sender;
+    uint quantity = people[user].orders[_storeID][_itemCode];
+    uint price = stores[_storeID].storeItems[_itemCode].price;
+    return(quantity, price);
+  }
 
   function addItem(string memory _name, uint _price, uint _sku, uint _storeID) public 
     checkOwnerOfStore(msg.sender, _storeID)
@@ -119,7 +133,7 @@ contract Market is Ownable, Stoppable {
   {
     uint transactAmount = SafeMath.mul(stores[_storeID].storeItems[_sku].price, _quantity);
     stores[_storeID].storeItems[_sku].sku = SafeMath.sub(stores[_storeID].storeItems[_sku].sku,  _quantity);
-    stores[_storeID].balance = SafeMath.add(stores[_storeID].balance, transactAmount);
+    stores[_storeID].storeBalance = SafeMath.add(stores[_storeID].storeBalance, transactAmount);
     people[msg.sender].orders[_storeID][_sku] =SafeMath.add(people[msg.sender].orders[_storeID][_sku], _quantity);
     emit Sold(_sku, _storeID, _quantity);
   }
@@ -130,9 +144,9 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
     checkOwnerOfStore(msg.sender, _storeID)
   {
-    require(amountToWithdraw <= stores[_storeID].balance);
+    require(amountToWithdraw <= stores[_storeID].storeBalance);
     stores[_storeID].storeOwner.transfer(amountToWithdraw);
-    stores[_storeID].balance = SafeMath.sub(stores[_storeID].balance, amountToWithdraw);
+    stores[_storeID].storeBalance = SafeMath.sub(stores[_storeID].storeBalance, amountToWithdraw);
     emit StoreBalanceWithdrawn(_storeID, amountToWithdraw);
   }
   
@@ -216,10 +230,9 @@ contract Market is Ownable, Stoppable {
     public
     view
     stopInEmergency()
-    checkOwnerOfStore(msg.sender, _storeID)
     returns(uint)
   {
-    return stores[_storeID].balance;
+    return stores[_storeID].storeBalance;
   }
 
   // If nothing is mathced do this.
