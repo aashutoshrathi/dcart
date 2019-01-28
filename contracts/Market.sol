@@ -4,6 +4,7 @@ import "./SafeMath.sol";
 import "./Ownable.sol";
 import "./Stoppable.sol";
 
+/** @title Market. */
 contract Market is Ownable, Stoppable {
   using SafeMath for uint;
   uint skuCount = 0;
@@ -12,12 +13,15 @@ contract Market is Ownable, Stoppable {
   // for circuit breaker
   bool public stopped = false;
   
+  // User Structure
   struct User{
     string name;
     mapping(uint => mapping(uint => uint)) orders;
     // storeID => itemID => quantity
   }
 
+  /** @dev User Structure defines user.
+  */
   struct Store {
     address payable storeOwner;
     string storeName;
@@ -26,7 +30,8 @@ contract Market is Ownable, Stoppable {
     mapping (uint=>Item) storeItems;
   }
 
-
+  /** @dev Item defines one item.
+  */
   struct Item {
     string name;
     uint sku;
@@ -36,6 +41,7 @@ contract Market is Ownable, Stoppable {
   mapping(uint => Store) public stores;
   mapping(address => bool) public isAdmin;
   mapping(address => User) public people;
+
   event ForSale(uint _sku, uint _storeID, string _name, uint _quantity);
   event Sold(uint _sku, uint _storeID, uint _quantity);
   event AdminAdded(address _user);
@@ -45,11 +51,13 @@ contract Market is Ownable, Stoppable {
   event StoreBalanceWithdrawn(uint _storeID, uint balanceToWithdraw);
   event ItemDeleted(uint _storeID, uint _sku);
 
+  // Verifires caller's address
   modifier verifyCaller (address _address) { 
     require (msg.sender == _address); 
     _;
   }
 
+  // Checks if store exists or not
   modifier checkStoreExistence(uint _storeID) {
     require(_storeID <= storeCount, "Invalid StoreID provided");
     _;
@@ -61,12 +69,12 @@ contract Market is Ownable, Stoppable {
     require (_storeOwner == stores[_storeID].storeOwner);
     _;
   }
-
+  // Checks if user paid enough
   modifier paidEnough(uint _totalPrice) { 
     require(msg.value >= _totalPrice); 
     _;
   }
-
+  
   modifier checkQuantity(uint _quantity, uint _storeID, uint _itemCode) {
     require(_quantity <= stores[_storeID].storeItems[_itemCode].sku, "Not sufficient quantity available");
     _;
