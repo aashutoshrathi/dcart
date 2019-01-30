@@ -11,7 +11,7 @@
 
 ### What is DCart 🛒 ?
 
-DCart is a proof of concept for decentralized market, which removes middlewares, authorities and ofcourse scope of curroption. DCart enables buying and selling of product with bare minimum computations and hence lower gas ⛽.
+DCart is a proof of concept for decentralized market, which removes middlewares, authorities and ofcourse scope of curroption. DCart enables buying and selling of product with bare minimum computations and hence lower gas ⛽. Uses **IPFS** for storing images.
 
 #### The Problem 😞
 
@@ -37,6 +37,7 @@ Plus, since we are not taking any data, all your purchase history will be yours 
 | Buying from another account |    Store after transactions     |
 | :-------------------------: | :-----------------------------: |
 | ![](assets/buying-item.png) | ![](assets/store-after-buy.png) |
+
 
 #### External Contracts Used :bookmark_tabs:
 
@@ -76,6 +77,7 @@ Development Setup:
                                          npm: v6.7.0
                                          Truffle: v5.0.2
                                          Ganache CLI: v6.2.5
+                                         IPFS API: v26.1.2
 `````
 
 ### Develop Locally
@@ -119,11 +121,50 @@ truffle test
 
 <img src="./assets/test-snap.png" align="center" width="650">
 
+### Checklist (For ease of reviewer)
+
+- [x] Project includes a README.md that explains the project.
+- [x] The project is a Truffle project that allows you to easily compile, migrate and test the provided Solidity contracts.
+- [x] Project is commented as outline in the documentation.
+- [x] At least one contract uses a library or inherits from another contract - Actually 3.
+- [x] I can run the app on a dev server locally for testing/grading (connecting to Rinkeby if required).
+- [x] I can visit a URL and interact with the app (can be localhost).
+- [x] The app displays the current ethereum account.
+- [x] I can sign transactions using Metamask (or uPort).
+- [x] The app interface reflects updates to to the contract state.
+- [x] 7 tests written in Javascript or Solidity (or both).
+- [x] Tests are explained with brief code comments.
+- [x] Tests are properly structured.
+- [x] All tests pass 🎉.
+- [x] At least one of the contracts implements a circuit breaker / emergency stop pattern.
+- [x] Project includes a file called [design_pattern_desicions.md](design_pattern_desicions.md) that explains some of the design decisions made by the author.
+- [x] [design_pattern_desicions.md](design_pattern_desicions.md) adequately describes the design patterns implemented in the project.
+- [x] Project includes a file called [avoiding_common_attacks.md](avoiding_common_attacks.md) that explains what measures you took to ensure that your contracts are not susceptible to common attacks.
+- [x] The [avoiding_common_attacks.md](avoiding_common_attacks.md) covers at least 3 common attacks and how the app mitigates user risk.
+- [x] Project includes a file called [deployed_addresses.txt](deployed_addresses.txt) that describes where the deployed testnet contracts live (which testnet and address).
+- [x] **Project uses IPFS** to store images for items on sale.
+- [ ] The project uses and upgradable design pattern for the smart contracts.
+- [ ] At least one contract is written in Vyper or LLL.
+- [ ] The app uses uPort for user authentication and/or signing and sending transactions.
+- [ ] The app uses the Ethereum Name Service to resolve human readable names to Ethereum addresses (in progress).
+- [ ] The project uses an Oracle service such as Oraclize.
+
+### ToDo
+
+- [ ] Add 404 for trash URLs.
+- [ ] Add Admin Dashboard.
+- [ ] Add GUI for Freezing Market.
+- [ ] Add Edit Item option.
+- [ ] Make My Orders more detailed.
+- [ ] Store more stuff on IPFS API by Infura.
+
 ---
 
 <p align="center>
 Icon Credits: Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </p>
+
+<p> Moksha Kudos taken from <a href="https://gitcoin.co/kudos/">Gitcoin Kudos</a></p>
 
 ---
 

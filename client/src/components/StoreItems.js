@@ -3,6 +3,8 @@
 import React, { Component } from "react";
 import { Row, Col, Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
+import Logo from "../assets/logo.png";
+import ipfs from "../ipfs";
 const { Content } = Layout;
 
 class StoreItems extends Component {
@@ -19,9 +21,13 @@ class StoreItems extends Component {
       storeName: "",
       isOwner: false,
       items: [],
-      storeBalance: 0
+      storeBalance: 0,
+      buffer: null,
+      imageHash: ""
     };
     this.handleChange = this.handleChange.bind(this);
+    this.getImage = this.getImage.bind(this);
+    this.fetchItems = this.fetchItems.bind(this);
   }
 
   showModal = () => {
@@ -39,12 +45,23 @@ class StoreItems extends Component {
   addItem = async event => {
     this.setState({ loading: true, visible: false });
     const { accounts, contract, storeID } = this.props;
-    const { name, price, quantity } = this.state;
-    await contract.methods
-      .addItem(name, price, quantity, storeID)
-      .send({ from: accounts[0] });
-    this.setState({ loading: false, value: "" });
-    this.fetchItems();
+    await ipfs.files.add(this.state.buffer, (err, res) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      // console.log(res[0].hash);
+      this.setState({ imageHash: res[0].hash });
+      // console.log(this.state.imageHash);
+      const { name, price, quantity } = this.state;
+      contract.methods
+        .addItem(name, price, quantity, storeID, res[0].hash)
+        .send({ from: accounts[0] })
+        .then(() => {
+          this.setState({ loading: false, value: "" });
+          this.fetchItems();
+        });
+    });
   };
 
   componentDidMount() {
@@ -90,6 +107,16 @@ class StoreItems extends Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
     // console.log(this.state);
+  };
+
+  getImage = event => {
+    const file = event.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = () => {
+      this.setState({ buffer: Buffer(reader.result) });
+      // console.log(this.state.buffer);
+    };
   };
 
   buyItem = async (itemIndex, price) => {
@@ -146,8 +173,10 @@ class StoreItems extends Component {
                 index: i,
                 name: res[0],
                 quantity: res[1],
-                price: res[2]
+                price: res[2],
+                image: res[3] === "" ? { Logo } : res[3]
               };
+              // console.log(res);
             })
             .catch(console.error)
             .finally(() => {
@@ -166,7 +195,7 @@ class StoreItems extends Component {
         <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
           <List
             size="default"
-            grid={{ gutter: 14, column: 3 }}
+            grid={{ gutter: 10, column: 4 }}
             header={
               <div>
                 <Row gutter={3}>
@@ -230,6 +259,13 @@ class StoreItems extends Component {
                             onChange={this.handleChange}
                             placeholder="Item Quantity"
                           />
+                          <br />
+                          <br />
+                          <Input
+                            type="file"
+                            name="image"
+                            onChange={this.getImage}
+                          />
                         </div>
                       </Modal>
                     </div>
@@ -242,7 +278,16 @@ class StoreItems extends Component {
             dataSource={this.state.items}
             renderItem={item => (
               <List.Item>
-                <Card title={item.name}>
+                <Card
+                  title={item.name}
+                  cover={
+                    <img
+                      alt={item.name}
+                      style={{ width: 225 }}
+                      src={"https://ipfs.io/ipfs/" + item.image}
+                    />
+                  }
+                >
                   <b>Price:</b> {item.price} wei
                   <br />
                   <b>Quantity:</b> {item.quantity} sku

@@ -35,7 +35,7 @@ contract("Market", accounts => {
     const market = await MarketPlace.deployed();
 
     // Add Item to store generated in previous step
-    await market.addItem("Fish Ramen", 1000, 2, 0, { from: alphaUser });
+    await market.addItem("Fish Ramen", 1000, 2, 0, "QmZQjqQAQVBdTqRLfgmoNk6cPJ5ZuK15jnFDPz64K9KX5D", { from: alphaUser });
 
     const itemData = await market.fetchItem(0, 0);
 
@@ -71,7 +71,7 @@ contract("Market", accounts => {
     // Get instance of deployed contact
     const market = await MarketPlace.deployed();
     // Add Item to store generated in previous step
-    await market.addItem("Octo Ramen", 1000, 2, 0, { from: alphaUser });
+    await market.addItem("Octo Ramen", 1000, 2, 0, "QmZQjqQAQVBdTqRLfgmoNk6cPJ5ZuK15jnFDPz64K9KX5D", { from: alphaUser });
 
     const itemData = await market.fetchItem(0, 0);
 
