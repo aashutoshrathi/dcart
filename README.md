@@ -148,6 +148,15 @@ truffle test
 - [ ] The app uses the Ethereum Name Service to resolve human readable names to Ethereum addresses (in progress).
 - [ ] The project uses an Oracle service such as Oraclize.
 
+### ToDo
+
+- [ ] Add 404 for trash URLs.
+- [ ] Add Admin Dashboard.
+- [ ] Add GUI for Freezing Market.
+- [ ] Add Edit Item option.
+- [ ] Make My Orders more detailed.
+- [ ] Store more stuff on IPFS API by Infura.
+
 ---
 
 <p align="center>

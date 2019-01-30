@@ -52,7 +52,7 @@ class StoreItems extends Component {
       }
       // console.log(res[0].hash);
       this.setState({ imageHash: res[0].hash });
-      console.log(this.state.imageHash);
+      // console.log(this.state.imageHash);
       const { name, price, quantity } = this.state;
       contract.methods
         .addItem(name, price, quantity, storeID, res[0].hash)
@@ -195,7 +195,7 @@ class StoreItems extends Component {
         <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
           <List
             size="default"
-            grid={{ gutter: 14, column: 3 }}
+            grid={{ gutter: 10, column: 4 }}
             header={
               <div>
                 <Row gutter={3}>
@@ -283,7 +283,7 @@ class StoreItems extends Component {
                   cover={
                     <img
                       alt={item.name}
-                      style={{ width: 225,}}
+                      style={{ width: 225 }}
                       src={"https://ipfs.io/ipfs/" + item.image}
                     />
                   }
