@@ -77,6 +77,7 @@ Development Setup:
                                          npm: v6.7.0
                                          Truffle: v5.0.2
                                          Ganache CLI: v6.2.5
+                                         IPFS API: v26.1.2
 `````
 
 ### Develop Locally
@@ -162,6 +163,8 @@ truffle test
 <p align="center>
 Icon Credits: Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
 </p>
+
+<p> Moksha Kudos taken from <a href="https://gitcoin.co/kudos/">Gitcoin Kudos</a></p>
 
 ---
 
