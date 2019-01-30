@@ -125,6 +125,7 @@ contract Market is Ownable, Stoppable {
     stores[_storeID].storeSkuCount = SafeMath.add(count, 1); // increase overall items count
     emit ForSale(skuCount, _storeID, _name, _sku);
   }
+  
 
   function deleteItem(uint _sku, uint _storeID) public 
     checkOwnerOfStore(msg.sender, _storeID)
@@ -249,5 +250,4 @@ contract Market is Ownable, Stoppable {
   function() external {
     revert();
   }
-
 }

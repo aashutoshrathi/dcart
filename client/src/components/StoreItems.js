@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import { Row, Col, Layout, List, Card, Modal, Button, Input } from "antd";
 import "antd/dist/antd.css";
+import Logo from "../assets/logo.png";
 import ipfs from "../ipfs";
 const { Content } = Layout;
 
@@ -51,7 +52,7 @@ class StoreItems extends Component {
       }
       // console.log(res[0].hash);
       this.setState({ imageHash: res[0].hash });
-      // console.log(this.state.imageHash);
+      console.log(this.state.imageHash);
       const { name, price, quantity } = this.state;
       contract.methods
         .addItem(name, price, quantity, storeID, res[0].hash)
@@ -173,7 +174,7 @@ class StoreItems extends Component {
                 name: res[0],
                 quantity: res[1],
                 price: res[2],
-                image: res[3]
+                image: res[3] === "" ? { Logo } : res[3]
               };
               // console.log(res);
             })
@@ -282,6 +283,7 @@ class StoreItems extends Component {
                   cover={
                     <img
                       alt={item.name}
+                      style={{ width: 225,}}
                       src={"https://ipfs.io/ipfs/" + item.image}
                     />
                   }
