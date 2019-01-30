@@ -34,6 +34,7 @@ contract Market is Ownable, Stoppable {
   */
   struct Item {
     string name;
+    string ipfsImage;
     uint sku;
     uint price;
   }
@@ -110,7 +111,7 @@ contract Market is Ownable, Stoppable {
     return(quantity, price);
   }
 
-  function addItem(string memory _name, uint _price, uint _sku, uint _storeID) public 
+  function addItem(string memory _name, uint _price, uint _sku, uint _storeID, string memory _imageHash) public 
     checkOwnerOfStore(msg.sender, _storeID)
     stopInEmergency()
   {
@@ -120,6 +121,7 @@ contract Market is Ownable, Stoppable {
     stores[_storeID].storeItems[count].name = _name;
     stores[_storeID].storeItems[count].price = _price;
     stores[_storeID].storeItems[count].sku = _sku;
+    stores[_storeID].storeItems[count].ipfsImage = _imageHash;
     stores[_storeID].storeSkuCount = SafeMath.add(count, 1); // increase overall items count
     emit ForSale(skuCount, _storeID, _name, _sku);
   }
@@ -161,13 +163,14 @@ contract Market is Ownable, Stoppable {
     stopInEmergency()
     public 
     view
-    returns (string memory name, uint sku, uint price) 
+    returns (string memory name, uint sku, uint price, string memory image) 
   {
     Item memory item = stores[_storeID].storeItems[_sku];
     name = item.name;
     sku = item.sku;
     price = item.price;
-    return (name, sku, price);
+    image = item.ipfsImage;
+    return (name, sku, price, image);
   }
 
   function addStore(string memory _name, address payable _storeOwner, uint _storeSkuCount) 
