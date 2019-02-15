@@ -2,8 +2,8 @@
 
 <h1 align="center"> DCart </h1> 
 <p align="center">
-<a href="https://travis-ci.org/dev-bootcamp-2019/final-project-aashutoshrathi">
-    <img src="https://img.shields.io/travis/dev-bootcamp-2019/final-project-aashutoshrathi/master.svg?style=for-the-badge" align="center">
+<a href="https://travis-ci.org/aashutoshrathi/dcart">
+    <img src="https://img.shields.io/travis/aashutoshrathi/dcart/master.svg?style=for-the-badge" align="center">
 </a>
 </p>
 <p align="center">Decentralized Online Market Prototype.</p>
