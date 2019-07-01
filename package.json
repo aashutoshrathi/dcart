@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/dev-bootcamp-2019/final-project-aashutoshrathi#readme",
   "dependencies": {
-    "truffle": "^5.0.2",
+    "truffle": "^5.0.25",
     "truffle-hdwallet-provider": "^1.0.2"
   }
 }
