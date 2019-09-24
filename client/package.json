@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "http://dev-bootcamp-2019.github.io/final-project-aashutoshrathi",
   "dependencies": {
-    "antd": "^3.23.3",
+    "antd": "^3.23.4",
     "gh-pages": "^2.1.1",
     "ipfs-api": "^26.1.2",
     "react": "^16.9.0",
