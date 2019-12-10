@@ -2566,10 +2566,10 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^3.26.1:
-  version "3.26.1"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-3.26.1.tgz#ebeed1f658f82f47b1be94812c7d5297923e9260"
-  integrity sha512-4dsBs4CkwsJXQ1KPcReimAQs4Z36IiD+glIZfk3nCxPP4FovRGzqbyPAyOHTOqFr0lXXxEGsPHRxd2ctLmS6Sg==
+antd@^3.26.2:
+  version "3.26.2"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-3.26.2.tgz#3c6068612a1790bf0cd3049ada70e8efb8b7c53e"
+  integrity sha512-18wU3MYozJTWnHpehuPFJhOClrgLSdApubCn6KOCSgZYFD5Y0ZG59bR44Um5uxz/rIWA09gVwIAs62kJNcVZZg==
   dependencies:
     "@ant-design/create-react-context" "^0.2.4"
     "@ant-design/icons" "~2.1.1"
