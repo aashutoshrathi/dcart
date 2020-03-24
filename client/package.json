@@ -7,7 +7,7 @@
     "antd": "^4.0.3",
     "gh-pages": "^2.2.0",
     "ipfs-api": "^26.1.2",
-    "react": "^16.13.0",
+    "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-loading": "^2.0.3",
     "react-router-dom": "^5.1.1",
