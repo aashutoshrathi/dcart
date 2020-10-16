@@ -22,7 +22,7 @@
   "homepage": "https://github.com/dev-bootcamp-2019/final-project-aashutoshrathi#readme",
   "dependencies": {
     "react-pagination-nav": "^1.0.7",
-    "truffle": "^5.1.48",
+    "truffle": "^5.1.49",
     "truffle-hdwallet-provider": "^1.0.17"
   }
 }
