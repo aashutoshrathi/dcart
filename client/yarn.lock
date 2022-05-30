@@ -2938,11 +2938,6 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/qs@^6.9.7":
-  version "6.9.7"
-  resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
-  integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
-
 "@types/resolve@1.17.1":
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-1.17.1.tgz#3afd6ad8967c77e4376c598a82ddd58f46ec45d6"
@@ -3457,17 +3452,16 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^4.20.6:
-  version "4.20.6"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-4.20.6.tgz#0d46a4b6128a717b4cad7ac6902311a0210f1d6f"
-  integrity sha512-JHEwCDjWTAJ1yxlC5QPb7LhRMvdhccN5lzMYDs72sp6VOiaXVGAlwols+F8nQQRaF9h/eA6yQyZ622y8b9vaoQ==
+antd@^4.20.7:
+  version "4.20.7"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-4.20.7.tgz#7f4e2f5f3620044323355386091967045cfe2c24"
+  integrity sha512-X2lP1AiN9K9se9ZuQvgpeku7Z1G7KqKTuJVt0lpwWzei4aRReG+hJWMSOAsy0HonRWI2nDc9XMIK+o/kul8EXQ==
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@ant-design/icons" "^4.7.0"
     "@ant-design/react-slick" "~0.28.1"
     "@babel/runtime" "^7.12.5"
     "@ctrl/tinycolor" "^3.4.0"
-    "@types/qs" "^6.9.7"
     classnames "^2.2.6"
     copy-to-clipboard "^3.2.0"
     lodash "^4.17.21"
