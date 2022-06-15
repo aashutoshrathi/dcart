@@ -3452,10 +3452,10 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^4.21.1:
-  version "4.21.1"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-4.21.1.tgz#919e0f61f4742e6cd3995ac05c841584de6725cc"
-  integrity sha512-GGhdK7pEaBX8/y07/Vec7SxWWgx75bvxZY259wwAK4mx76URzHF6bkIcwGMdAA76qm/IGrjfeOSFRvLejlNSqg==
+antd@^4.21.2:
+  version "4.21.2"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-4.21.2.tgz#07cf60b3100cca0484ed2eee3f7068785d670a20"
+  integrity sha512-DmxCMoA0IQKdeLVdHZjrHlsiXGDGHBvN62Y/+S0PfMrcQo7HW4Ps7RxVayobsCMovbrhX3Fx+u1/ES292me5WQ==
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@ant-design/icons" "^4.7.0"
