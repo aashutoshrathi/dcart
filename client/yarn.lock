@@ -2020,10 +2020,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"
   integrity sha512-M0qqxAcwCsIVfpFQSlGN5XjXWu8l5JDZN+fPt1LeW5SZexQTgnaEvgXAY+CeygRw0EeppWHi12JxESWiWrB0Sg==
 
-"@ctrl/tinycolor@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
-  integrity sha512-JZButFdZ1+/xAfpguQHoabIXkcqRRKpMrWKBkpEZZyxfY9C1DpADFB8PEqGSTeFr135SaTRfKqGKx5xSCLI7ZQ==
+"@ctrl/tinycolor@^3.4.0", "@ctrl/tinycolor@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.6.0.tgz#53fa5fe9c34faee89469e48f91d51a3766108bc8"
+  integrity sha512-/Z3l6pXthq0JvMYdUFyX9j0MaCltlIn6mfh9jLyQwg5aPKxkyNa0PTHtU1AlFXLNk55ZuAeJRcpvq+tmLfKmaQ==
 
 "@emotion/hash@^0.8.0":
   version "0.8.0"
@@ -3530,17 +3530,17 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-5.2.1.tgz#96ee27776bf920fc89a508d3db4da6554b396973"
-  integrity sha512-yuTeYEhfvsEjHdPwhb47GXBk9EHZ/pHDaUgJMXHhOUbaWPWnTliHtQwgHYMJT9rEZobi3O0YRP2wnYWVtbDGsw==
+antd@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-5.2.2.tgz#ed19143a1416aa352210d868bebb4d1df3ce76bf"
+  integrity sha512-IHuMyGvgI+pPmoZNJFfhVykb0eW6+iO/39/9qPE0ub9gKAnI4vaK+hA5li6aX+mjM/EqgckdWgLpaIP98kGrvw==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/cssinjs" "^1.5.6"
     "@ant-design/icons" "^5.0.0"
     "@ant-design/react-slick" "~1.0.0"
     "@babel/runtime" "^7.18.3"
-    "@ctrl/tinycolor" "^3.4.0"
+    "@ctrl/tinycolor" "^3.6.0"
     "@rc-component/mutate-observer" "^1.0.0"
     "@rc-component/tour" "~1.6.0"
     classnames "^2.2.6"
