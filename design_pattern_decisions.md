@@ -12,7 +12,7 @@
 
 It prevents store from re-entrancy and DoS attacks.
 
-## Events and Loggging
+## Events and Logging
 
 Every time a user is created or updated or deleted or a donation is made and event is fired which can be catched at the frontend to make it more interactive and improve the UX.
 
