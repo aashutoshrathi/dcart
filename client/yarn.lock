@@ -3427,10 +3427,10 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^5.27.0:
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-5.27.0.tgz#2798b4b6d8ee7c295fcdd4e2cd7c037c5e927465"
-  integrity sha512-o54dmpooLOc08RSGCkeEQBYAGPxUSmnhmYJKCNTHH46vzjOVxdteu+wPTRVkRbAkDTbs2VcNr5VL7Lu67rPIiA==
+antd@^5.27.1:
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-5.27.1.tgz#5378fc017cb4057ffefe2a670f20e54b924d897d"
+  integrity sha512-jGMSdBN7hAMvPV27B4RhzZfL6n6yu8yDbo7oXrlJasaOqB7bSDPcjdEy1kXy3JPsny/Qazb1ykzRI4EfcByAPQ==
   dependencies:
     "@ant-design/colors" "^7.2.1"
     "@ant-design/cssinjs" "^1.23.0"
