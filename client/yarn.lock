@@ -3427,10 +3427,10 @@ ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
   integrity sha1-qCJQ3bABXponyoLoLqYDu/pF768=
 
-antd@^5.27.0:
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-5.27.0.tgz#2798b4b6d8ee7c295fcdd4e2cd7c037c5e927465"
-  integrity sha512-o54dmpooLOc08RSGCkeEQBYAGPxUSmnhmYJKCNTHH46vzjOVxdteu+wPTRVkRbAkDTbs2VcNr5VL7Lu67rPIiA==
+antd@^5.27.3:
+  version "5.27.3"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-5.27.3.tgz#6c7cf0baf1907e0766f6f44fe729aaaf108ac440"
+  integrity sha512-Jewp1ek1iyqoAyjWyPgzc2kioZ+7S3jh39a+tld/j4ucnuf/cBk4omfyIdhLz49pVNsaEcRp5LtJOSQPFwPgpA==
   dependencies:
     "@ant-design/colors" "^7.2.1"
     "@ant-design/cssinjs" "^1.23.0"
@@ -3471,7 +3471,7 @@ antd@^5.27.0:
     rc-slider "~11.1.8"
     rc-steps "~6.0.1"
     rc-switch "~4.1.0"
-    rc-table "~7.51.1"
+    rc-table "~7.52.6"
     rc-tabs "~15.7.0"
     rc-textarea "~1.10.2"
     rc-tooltip "~6.4.0"
@@ -12416,10 +12416,10 @@ rc-switch@~4.1.0:
     classnames "^2.2.1"
     rc-util "^5.30.0"
 
-rc-table@~7.51.1:
-  version "7.51.1"
-  resolved "https://registry.yarnpkg.com/rc-table/-/rc-table-7.51.1.tgz#cd69ae3262d3b61e4c93c979c12786906e944691"
-  integrity sha512-5iq15mTHhvC42TlBLRCoCBLoCmGlbRZAlyF21FonFnS/DIC8DeRqnmdyVREwt2CFbPceM0zSNdEeVfiGaqYsKw==
+rc-table@~7.52.6:
+  version "7.52.7"
+  resolved "https://registry.yarnpkg.com/rc-table/-/rc-table-7.52.7.tgz#ad816bbcfe3491581d9140a59a9e43fd08327211"
+  integrity sha512-yuZfnTpuHwRa4JH+F28wQfGeDzqtgIDvLBBJk5sFncXQjTExhtBNc6dPfVo5pL5SjabJEoejefs6wsrAKfhDoQ==
   dependencies:
     "@babel/runtime" "^7.10.1"
     "@rc-component/context" "^1.4.0"
