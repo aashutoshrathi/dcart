@@ -12601,17 +12601,17 @@ react-refresh@^0.11.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
-react-router-dom@^7.7.1:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.7.1.tgz#456d1053dda5e1c1328a2b6b2359f6a1c47072fc"
-  integrity sha512-bavdk2BA5r3MYalGKZ01u8PGuDBloQmzpBZVhDLrOOv1N943Wq6dcM9GhB3x8b7AbqPMEezauv4PeGkAJfy7FQ==
+react-router-dom@^7.9.4:
+  version "7.9.4"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-7.9.4.tgz#37d35b4b7f730b37434f2b7e95121ef557a6b538"
+  integrity sha512-f30P6bIkmYvnHHa5Gcu65deIXoA2+r3Eb6PJIAddvsT9aGlchMatJ51GgpU470aSqRRbFX22T70yQNUGuW3DfA==
   dependencies:
-    react-router "7.7.1"
+    react-router "7.9.4"
 
-react-router@7.7.1:
-  version "7.7.1"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.7.1.tgz#c12ebbad162da655951dd79325f205f7238d609e"
-  integrity sha512-jVKHXoWRIsD/qS6lvGveckwb862EekvapdHJN/cGmzw40KnJH5gg53ujOJ4qX6EKIK9LSBfFed/xiQ5yeXNrUA==
+react-router@7.9.4:
+  version "7.9.4"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.9.4.tgz#2c4249e5d0a6bb8b8f6bf0ede8f5077e4ff8024f"
+  integrity sha512-SD3G8HKviFHg9xj7dNODUKDFgpG4xqD5nhyd0mYoB5iISepuZAvzSr8ywxgxKJ52yRzf/HWtVHc9AWwoTbljvA==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
